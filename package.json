@@ -1,0 +1,29 @@
+{
+  "name": "shared_aeropulse_files",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Johnnyxcode/shared_aeropulse_files.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Johnnyxcode/shared_aeropulse_files/issues"
+  },
+  "homepage": "https://github.com/Johnnyxcode/shared_aeropulse_files#readme",
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "reflect-metadata": "^0.2.2",
+    "typescript": "^5.7.3"
+  }
+}
