@@ -1,5 +1,4 @@
 "use strict";
-// src/dto/register-user.dto.ts
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13,6 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegisterUserDto = void 0;
 const class_validator_1 = require("class-validator");
 class RegisterUserDto {
+    constructor() {
+        this.email = '';
+        this.password = '';
+        this.firstName = '';
+        this.lastName = '';
+        this.role = '';
+        this.department = '';
+        this.phoneNumber = '';
+    }
 }
 exports.RegisterUserDto = RegisterUserDto;
 __decorate([
