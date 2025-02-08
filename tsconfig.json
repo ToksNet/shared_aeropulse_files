@@ -11,6 +11,6 @@
       "rootDir": "./",
       "declaration": true
     },
-    "include": ["dtos/**/*"]
+    "include": ["dtos/**/*", "dtos/create-user.dto.js", "dtos/login-user.dto.js", "prisma/**/*", "src/index.ts"]
   }
   
