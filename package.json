@@ -4,9 +4,14 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "prisma"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc && npm run copy:prisma",
+    "copy:prisma": "copyfiles -u 1 \"prisma/**/*\" dist/prisma"
   },
   "repository": {
     "type": "git",
@@ -25,5 +30,8 @@
     "class-validator": "^0.14.1",
     "reflect-metadata": "^0.2.2",
     "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
   }
 }
