@@ -5,6 +5,7 @@ export declare class RegisterUserDto {
     lastName: string;
     role: string;
     department: string;
-    phoneNumber: string;
+    phoneNumber?: string;
     profilePicture?: string;
+    inviteToken?: string;
 }

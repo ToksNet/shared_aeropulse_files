@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class RegisterUserDto {
   @IsEmail()
@@ -24,11 +24,16 @@ export class RegisterUserDto {
   @IsString()
   department: string = '';
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  phoneNumber: string = '';
+  phoneNumber?: string; 
 
   @IsOptional()
   @IsString()
   profilePicture?: string;
+
+  // New property for invitation token
+  @IsOptional()
+  @IsString()
+  inviteToken?: string;
 }
