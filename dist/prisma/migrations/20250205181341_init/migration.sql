@@ -7,7 +7,7 @@ CREATE TABLE `User` (
     `lastName` VARCHAR(191) NOT NULL,
     `role` VARCHAR(191) NOT NULL,
     `department` VARCHAR(191) NOT NULL,
-    `phoneNumber` VARCHAR(191) NOT NULL,
+    `phoneNumber` VARCHAR(191) NULL,
     `profilePicture` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 

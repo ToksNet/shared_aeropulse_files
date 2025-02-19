@@ -19,6 +19,7 @@ class RegisterUserDto {
         this.lastName = '';
         this.role = '';
         this.department = '';
+        this.phoneNumber = '';
     }
 }
 exports.RegisterUserDto = RegisterUserDto;
@@ -52,7 +53,7 @@ __decorate([
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "department", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "phoneNumber", void 0);
@@ -61,8 +62,3 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "profilePicture", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], RegisterUserDto.prototype, "inviteToken", void 0);
