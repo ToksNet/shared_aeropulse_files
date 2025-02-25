@@ -25,6 +25,7 @@ model User {
   phoneNumber    String?   @unique
   profilePicture String?
   createdAt      DateTime @default(now())
+  documentsCreated Documents[] @relation("author")
   documentAuthorizations DocumentAuthorization[]
 
   messages       ChatMessage[]
@@ -55,6 +56,7 @@ model Documents {
   // relations
   author_id           String
   author  User @relation( "author", fields: [author_id], references: [id])
+  authorized_users User[]   @relation("authorized_users")
   documentAuthorizations DocumentAuthorization[]
 }
 
