@@ -25,11 +25,13 @@ model User {
   phoneNumber    String?   @unique
   profilePicture String?
   createdAt      DateTime @default(now())
-  documentsCreated Documents[] @relation("author")
-  documentAuthorizations DocumentAuthorization[]
+  Documents         Documents[] @relation("authorized_users")
+  Documents_created Documents[] @relation("author")
 
-  messages       ChatMessage[]
-  groups         GroupMember[]
+  messages ChatMessage[]
+  groups   GroupMember[]
+
+  Folders Folders[] @relation("author")
 }
 
 model Invite {
@@ -56,20 +58,23 @@ model Documents {
   // relations
   author_id           String
   author  User @relation( "author", fields: [author_id], references: [id])
+  folder_id        String?
+  folder           Folders? @relation(fields: [folder_id], references: [id])
   authorized_users User[]   @relation("authorized_users")
-  documentAuthorizations DocumentAuthorization[]
 }
 
-model DocumentAuthorization {
-  id         String   @id @default(uuid())
-  userId     String
-  documentId String
-  createdAt  DateTime @default(now())
+model Folders {
+  id   String @id @default(uuid())
+  name String @db.VarChar(512)
+  path String @db.VarChar(512)
 
-  user     User      @relation(fields: [userId], references: [id])
-  document Documents @relation(fields: [documentId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@unique([userId, documentId])
+  // relations
+  author_id String
+  author    User        @relation("author", fields: [author_id], references: [id])
+  Documents Documents[]
 }
 
 
