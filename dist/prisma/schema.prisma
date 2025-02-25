@@ -1,8 +1,6 @@
 // prisma/schema.prisma
 
-
-// This is your Prisma schema file,
-
+// This is your Prisma schema data file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -25,9 +23,6 @@ model User {
   phoneNumber    String?   @unique
   profilePicture String?
   createdAt      DateTime @default(now())
-  Documents Documents[] @relation("authorized_users")
-  Documents_created Documents[] @relation("author")
-
   messages       ChatMessage[]
   groups         GroupMember[]
 }
@@ -41,22 +36,6 @@ model Invite {
   expiresAt   DateTime
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-}
-
-
-model Documents {
-  id               String   @id @default(uuid())
-  file_name        String   @db.VarChar(512)
-  path             String   @db.VarChar(512)
-  mime_type        String   @db.VarChar(512)
-  native           Boolean
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  // relations
-  author_id           String
-  author  User @relation( "author", fields: [author_id], references: [id])
-  authorized_users User[] @relation("authorized_users")
 }
 
 
