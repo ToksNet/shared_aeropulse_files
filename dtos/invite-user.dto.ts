@@ -7,7 +7,7 @@ export class InviteUserDto {
   @IsNotEmpty({ message: 'Email is required' })
   email: string = '';
 
-  @ApiProperty({ description: 'Invitee role', example: 'Admin' })
+  @ApiProperty({ description: 'Invitee role', example: 'Admin or member' })
   @IsString({ message: 'Role must be a string' })
   @IsNotEmpty({ message: 'Role is required' })
   @MaxLength(50, { message: 'Role must not exceed 50 characters' })

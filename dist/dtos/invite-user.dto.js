@@ -27,7 +27,7 @@ __decorate([
     __metadata("design:type", String)
 ], InviteUserDto.prototype, "email", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ description: 'Invitee role', example: 'Admin' }),
+    (0, swagger_1.ApiProperty)({ description: 'Invitee role', example: 'Admin or member' }),
     (0, class_validator_1.IsString)({ message: 'Role must be a string' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'Role is required' }),
     (0, class_validator_1.MaxLength)(50, { message: 'Role must not exceed 50 characters' }),
