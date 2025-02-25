@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class RegisterUserDto {
@@ -31,17 +31,18 @@ export class RegisterUserDto {
   @IsString()
   department: string = '';
 
+
   @ApiPropertyOptional({ description: 'User phone number', example: '+1234567890' })
   @IsOptional()
   @IsString()
   phoneNumber?: string; 
 
-  @ApiPropertyOptional({ description: 'Profile picture URL', example: 'https://example.com/image.jpg' })
+  @ApiPropertyOptional({ description: 'Profile picture URL', example: 'https://example.com/profile.jpg' })
   @IsOptional()
   @IsString()
   profilePicture?: string;
 
-  @ApiPropertyOptional({ description: 'Invitation token if applicable' })
+  @ApiPropertyOptional({ description: 'Invitation token (if applicable)' })
   @IsOptional()
   @IsString()
   inviteToken?: string;

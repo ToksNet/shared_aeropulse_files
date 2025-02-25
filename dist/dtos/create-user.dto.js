@@ -65,13 +65,13 @@ __decorate([
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "phoneNumber", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ description: 'Profile picture URL', example: 'https://example.com/image.jpg' }),
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Profile picture URL', example: 'https://example.com/profile.jpg' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], RegisterUserDto.prototype, "profilePicture", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ description: 'Invitation token if applicable' }),
+    (0, swagger_1.ApiPropertyOptional)({ description: 'Invitation token (if applicable)' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
