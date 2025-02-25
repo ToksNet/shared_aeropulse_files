@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginUserDto = void 0;
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class LoginUserDto {
     constructor() {
         this.email = '';
@@ -19,10 +20,12 @@ class LoginUserDto {
 }
 exports.LoginUserDto = LoginUserDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Login User with email address', example: 'user1@example.com' }),
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], LoginUserDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: 'Login with User password', example: 'strongPassword123' }),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
