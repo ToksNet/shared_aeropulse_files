@@ -51,7 +51,7 @@ model Documents {
   file_name String   @db.VarChar(512)
   path      String?  @db.VarChar(512)
   mime_type String?  @db.VarChar(512)
-  content   String?  @db.Text
+  content   String?  @db.VarChar(512)
   native    Boolean
   deleted   Boolean  @default(false)
   createdAt DateTime @default(now())
