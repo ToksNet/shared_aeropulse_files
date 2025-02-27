@@ -38,7 +38,7 @@ CREATE TABLE `Documents` (
     `file_name` VARCHAR(512) NOT NULL,
     `path` VARCHAR(512) NULL,
     `mime_type` VARCHAR(512) NULL,
-    `content` TEXT NULL,
+    `content` VARCHAR(512) NULL,
     `native` BOOLEAN NOT NULL,
     `deleted` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -64,7 +64,7 @@ CREATE TABLE `Folders` (
 -- CreateTable
 CREATE TABLE `ChatMessage` (
     `id` VARCHAR(191) NOT NULL,
-    `content` VARCHAR(191) NULL,
+    `content` VARCHAR(512) NULL,
     `senderId` VARCHAR(191) NOT NULL,
     `groupId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
