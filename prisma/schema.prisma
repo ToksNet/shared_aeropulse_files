@@ -83,7 +83,7 @@ model Folders {
 
 model ChatMessage {
   id        String   @id @default(uuid())
-  content   String?  @db.VarChar(512)
+  content   String?  
   senderId  String
   groupId   String?  // null means private/direct message
   createdAt DateTime @default(now())
