@@ -64,7 +64,7 @@ CREATE TABLE `Folders` (
 -- CreateTable
 CREATE TABLE `ChatMessage` (
     `id` VARCHAR(191) NOT NULL,
-    `content` VARCHAR(512) NULL,
+    `content` LONGTEXT NULL,
     `senderId` VARCHAR(191) NOT NULL,
     `groupId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
