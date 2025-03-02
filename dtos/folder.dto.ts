@@ -9,7 +9,7 @@ export class CreateFolderDto {
   @ApiProperty({ description: "Folder author" })
   @IsNotEmpty()
   @IsString()
-  author_id?: string = '';
+  author_id: string = '';
 
 }
 
