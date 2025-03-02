@@ -67,8 +67,8 @@ model Documents {
   folder           Folders? @relation(fields: [folder_id], references: [id])
   authorized_users User[]   @relation("authorized_users")
 
-  ESignature_id String
-  Esignature ESignature @relation(fields: [ESignature_id], references: [id])
+  ESignature_id String?
+  Esignature ESignature? @relation(fields: [ESignature_id], references: [id])
 
 }
 
