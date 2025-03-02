@@ -32,6 +32,9 @@ model User {
   groups   GroupMember[]
 
   Folders Folders[] @relation("author")
+
+  ESignature ESignature?
+
 }
 
 model Invite {
@@ -63,12 +66,15 @@ model Documents {
   folder_id        String?
   folder           Folders? @relation(fields: [folder_id], references: [id])
   authorized_users User[]   @relation("authorized_users")
+
+  ESignature_id String
+  Esignature ESignature @relation(fields: [ESignature_id], references: [id])
+
 }
 
 model Folders {
   id   String @id @default(uuid())
   name String @db.VarChar(512)
-  path String @db.VarChar(512)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -110,4 +116,18 @@ model GroupMember {
 
   group    ChatGroup @relation(fields: [groupId], references: [id])
   user     User      @relation(fields: [userId], references: [id])
+}
+
+
+model ESignature{
+  id String @id @default(uuid())
+  path String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user_id String @unique
+  user User @relation(fields: [user_id], references: [id])
+  documentsSigned Documents[]
+
 }

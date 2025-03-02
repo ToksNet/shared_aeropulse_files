@@ -8,7 +8,9 @@ export * from '../dtos/create-document.dto';
 export * from '../dtos/folder.dto';
 export * from '../dtos/update-document.dto';
 export * from '../dtos/update-folder.dto';
-export * from '../dtos/upload-documents.dto'; 
+export * from '../dtos/upload-documents.dto';
+export * from '../dtos/create-signature.dto'; 
+
 
 
 
