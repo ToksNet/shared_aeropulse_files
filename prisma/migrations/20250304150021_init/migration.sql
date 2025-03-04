@@ -45,6 +45,7 @@ CREATE TABLE `Documents` (
     `updatedAt` DATETIME(3) NOT NULL,
     `author_id` VARCHAR(191) NOT NULL,
     `folder_id` VARCHAR(191) NULL,
+    `ESignature_id` VARCHAR(191) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -53,7 +54,6 @@ CREATE TABLE `Documents` (
 CREATE TABLE `Folders` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(512) NOT NULL,
-    `path` VARCHAR(512) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `author_id` VARCHAR(191) NOT NULL,
@@ -66,6 +66,7 @@ CREATE TABLE `ChatMessage` (
     `id` VARCHAR(191) NOT NULL,
     `content` LONGTEXT NULL,
     `senderId` VARCHAR(191) NOT NULL,
+    `recipientId` VARCHAR(191) NULL,
     `groupId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `attachmentUrl` VARCHAR(191) NULL,
@@ -93,6 +94,18 @@ CREATE TABLE `GroupMember` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `ESignature` (
+    `id` VARCHAR(191) NOT NULL,
+    `path` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `user_id` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `ESignature_user_id_key`(`user_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `_authorized_users` (
     `A` VARCHAR(191) NOT NULL,
     `B` VARCHAR(191) NOT NULL,
@@ -108,10 +121,16 @@ ALTER TABLE `Documents` ADD CONSTRAINT `Documents_author_id_fkey` FOREIGN KEY (`
 ALTER TABLE `Documents` ADD CONSTRAINT `Documents_folder_id_fkey` FOREIGN KEY (`folder_id`) REFERENCES `Folders`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Documents` ADD CONSTRAINT `Documents_ESignature_id_fkey` FOREIGN KEY (`ESignature_id`) REFERENCES `ESignature`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Folders` ADD CONSTRAINT `Folders_author_id_fkey` FOREIGN KEY (`author_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ChatMessage` ADD CONSTRAINT `ChatMessage_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ChatMessage` ADD CONSTRAINT `ChatMessage_recipientId_fkey` FOREIGN KEY (`recipientId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ChatMessage` ADD CONSTRAINT `ChatMessage_groupId_fkey` FOREIGN KEY (`groupId`) REFERENCES `ChatGroup`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -121,6 +140,9 @@ ALTER TABLE `GroupMember` ADD CONSTRAINT `GroupMember_groupId_fkey` FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE `GroupMember` ADD CONSTRAINT `GroupMember_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ESignature` ADD CONSTRAINT `ESignature_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_authorized_users` ADD CONSTRAINT `_authorized_users_A_fkey` FOREIGN KEY (`A`) REFERENCES `Documents`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
