@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsArray } from 'class-validator';
 
 export class ChatMessageDto {
   @ApiProperty({
@@ -54,7 +54,7 @@ export class CreateChatGroupDto {
   name: string = '';
 
   @ApiPropertyOptional({
-    description: 'An optional list of user IDs to add as initial members of the chat group',
+    description: 'An optional list of users IDs  add as initial members of the chat group',
     example: ['user-id-1', 'user-id-2'],
   })
   @IsOptional()
