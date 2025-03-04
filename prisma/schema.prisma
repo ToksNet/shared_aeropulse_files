@@ -91,11 +91,13 @@ model ChatMessage {
   id        String   @id @default(uuid())
   content   String?  @db.LongText 
   senderId  String
+  recipientId   String? 
   groupId   String?  // null means private/direct message
   createdAt DateTime @default(now())
   attachmentUrl String?
 
   sender    User     @relation(fields: [senderId], references: [id])
+  recipient User?    @relation("Recipient", fields: [recipientId], references: [id])
   group     ChatGroup? @relation(fields: [groupId], references: [id])
 }
 
