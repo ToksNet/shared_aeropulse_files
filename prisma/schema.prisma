@@ -20,7 +20,7 @@ model User {
   password       String
   firstName      String
   lastName       String
-  role           String
+  role           UserRole @default(Member)
   department     String
   phoneNumber    String?   @unique
   profilePicture String?
@@ -36,6 +36,11 @@ model User {
 
   ESignature ESignature?
 
+}
+
+enum UserRole {
+  Admin
+  Member
 }
 
 model Invite {
@@ -111,10 +116,16 @@ model ChatGroup {
   members   GroupMember[]
 }
 
+enum GroupMemberTitle {
+  GroupAdmin
+  Member
+}
+
 model GroupMember {
   id       String   @id @default(uuid())
   groupId  String
   userId   String
+  title    GroupMemberTitle @default(Member)
   joinedAt DateTime @default(now())
 
   group    ChatGroup @relation(fields: [groupId], references: [id])
