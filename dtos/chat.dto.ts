@@ -61,6 +61,11 @@ export class CreateChatGroupDto {
   @IsArray()
   @IsString({ each: true })
   memberIds?: string[];
+
+  @ApiProperty({description: 'This is the creator of the group',
+    example: 'creators id'
+  })
+  @IsString()
 }
 
 
