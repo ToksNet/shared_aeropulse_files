@@ -52,7 +52,7 @@ model Invite {
 
 model Documents {
   id        String   @id @default(uuid())
-  file_name String   @db.VarChar(512)
+  file_name String   @db.VarChar(512) @unique 
   path      String?  @db.VarChar(512)
   mime_type String?  @db.VarChar(512)
   content   String?  @db.VarChar(512)
@@ -119,6 +119,8 @@ model GroupMember {
 
   group    ChatGroup @relation(fields: [groupId], references: [id])
   user     User      @relation(fields: [userId], references: [id])
+
+   @@unique([userId, groupId])
 }
 
 
