@@ -66,6 +66,8 @@ export class CreateChatGroupDto {
     example: 'creators id'
   })
   @IsString()
+  @IsNotEmpty()
+  creatorId: string = '';
 }
 
 
