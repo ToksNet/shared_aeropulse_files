@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsArray } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, IsOptional, IsArray, IsBoolean } from 'class-validator';
 
 export class ChatMessageDto {
   @ApiProperty({
@@ -40,7 +40,26 @@ export class ChatMessageDto {
   })
   @IsOptional()
   @IsString()
-  attachmentUrl?: string;
+  attachments?: string[];
+}
+
+export class UpdateChatMessageDto extends PartialType(ChatMessageDto) {}
+
+export class UpdateGroupPermissionsDto {
+  @ApiProperty({ description: 'Permission to edit group settings (name, description)', required: false, default: false })
+  @IsOptional()
+  @IsBoolean()
+  canEditSettings?: boolean;
+
+  @ApiProperty({ description: 'Permission to send messages in the group', required: false, default: true })
+  @IsOptional()
+  @IsBoolean()
+  canSendMessage?: boolean;
+
+  @ApiProperty({ description: 'Permission to add members to the group', required: false, default: true })
+  @IsOptional()
+  @IsBoolean()
+  canAddMembers?: boolean;
 }
 
 
@@ -68,7 +87,27 @@ export class CreateChatGroupDto {
   @IsString()
   @IsNotEmpty()
   creatorId: string = '';
+
+  
+  @ApiPropertyOptional({
+    description: 'Group profile picture URL',
+    example: 'https://example.com/group-picture.png',
+  })
+  @IsOptional()
+  @IsString()
+  profilePicture?: string;
+
+  @ApiPropertyOptional({
+    description: 'Group description',
+    example: 'This group is for discussing project updates',
+  })
+  @IsOptional()
+  @IsString()
+  description?: string;
 }
+
+export class UpdateChatGroupDto extends PartialType(CreateChatGroupDto) {}
+
 
 
 export class AddGroupMemberDto {
@@ -88,3 +127,6 @@ export class AddGroupMemberDto {
   @IsNotEmpty()
   userId: string = '';
 }
+
+export class UpdateGroupMemberDto extends PartialType(AddGroupMemberDto) {}
+
