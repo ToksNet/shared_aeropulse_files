@@ -6,11 +6,6 @@ export class CreateFolderDto {
   @IsNotEmpty()
   name: string = '';
 
-  @ApiPropertyOptional({ description: "Updated folder ID of the document" })
-  @IsOptional()
-  @IsString()
-  folder_id?: string = '';
-
   @ApiProperty({ description: "Folder author" })
   @IsNotEmpty()
   @IsString()
@@ -23,11 +18,6 @@ export class UpdateFolderDto {
   @ApiPropertyOptional({ description: "Updated name of the folder" })
   @IsOptional()
   name?: string = '';
-
-  @ApiPropertyOptional({ description: "Updated folder ID of the document" })
-  @IsOptional()
-  @IsString()
-  folder_id?: string = '';
 
   @ApiPropertyOptional({ description: "Updated folder path" })
   @IsOptional()

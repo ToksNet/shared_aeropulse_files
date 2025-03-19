@@ -1,6 +1,5 @@
 // prisma/schema.prisma
 
-
 // This is your Prisma schema file,
 
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
@@ -15,28 +14,27 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(uuid())
-  email          String   @unique
-  password       String
-  firstName      String
-  lastName       String
-  role           UserRole @default(Member)
-  department     String
-  phoneNumber    String?   @unique
-  profilePicture String?
-  createdAt      DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String      @id @default(uuid())
+  email             String      @unique
+  password          String
+  firstName         String
+  lastName          String
+  role              UserRole    @default(Member)
+  department        String
+  phoneNumber       String?     @unique
+  profilePicture    String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
   Documents         Documents[] @relation("authorized_users")
   Documents_created Documents[] @relation("author")
 
-  sentMessages      ChatMessage[]  @relation("SentMessages")
-  receivedMessages  ChatMessage[]  @relation("ReceivedMessages")
-  groups   GroupMember[]
+  sentMessages     ChatMessage[] @relation("SentMessages")
+  receivedMessages ChatMessage[] @relation("ReceivedMessages")
+  groups           GroupMember[]
 
   Folders Folders[] @relation("author")
 
   ESignature ESignature?
-
 }
 
 enum UserRole {
@@ -45,27 +43,27 @@ enum UserRole {
 }
 
 model Invite {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  role        String
-  department  String
-  token       String   @unique
-  expiresAt   DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  email      String   @unique
+  role       String
+  department String
+  token      String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
-
 model Documents {
-  id        String   @id @default(uuid())
-  file_name String   @db.VarChar(512) @unique 
-  path      String?  @db.VarChar(512)
-  mime_type String?  @db.VarChar(512)
-  content   String?  @db.VarChar(512)
-  native    Boolean
-  deleted   Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid())
+  file_name  String   @unique @db.VarChar(512)
+  path       String?  @db.VarChar(512)
+  mime_type  String?  @db.VarChar(512)
+  content    String?  @db.VarChar(512)
+  department String   @db.VarChar(512)
+  native     Boolean
+  deleted    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // relations
   author_id        String
@@ -75,8 +73,7 @@ model Documents {
   authorized_users User[]   @relation("authorized_users")
 
   ESignature_id String?
-  Esignature ESignature? @relation(fields: [ESignature_id], references: [id])
-
+  Esignature    ESignature? @relation(fields: [ESignature_id], references: [id])
 }
 
 model Folders {
@@ -92,54 +89,52 @@ model Folders {
   Documents Documents[]
 }
 
-
-
 model ChatMessage {
-  id        String   @id @default(uuid())
-  content   String?  @db.LongText 
-  senderId  String
-  recipientId   String? 
-  groupId   String?  // null means private/direct message
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  attachments   Attachment[]
+  id          String       @id @default(uuid())
+  content     String?      @db.LongText
+  senderId    String
+  recipientId String?
+  groupId     String? // null means private/direct message
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  attachments Attachment[]
 
-  sender        User     @relation("SentMessages", fields: [senderId], references: [id])
-  recipient     User?    @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  sender    User       @relation("SentMessages", fields: [senderId], references: [id])
+  recipient User?      @relation("ReceivedMessages", fields: [recipientId], references: [id])
   group     ChatGroup? @relation(fields: [groupId], references: [id])
 }
 
 model Attachment {
-  id            String     @id @default(uuid())
+  id            String      @id @default(uuid())
   url           String
-  fileType      String?    // optional field to store file type or extension
+  fileType      String? // optional field to store file type or extension
   chatMessageId String
   chatMessage   ChatMessage @relation(fields: [chatMessageId], references: [id])
-  createdAt     DateTime   @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model ChatGroup {
-  id        String   @id @default(uuid())
-  name      String
+  id             String            @id @default(uuid())
+  name           String
   profilePicture String?
-  description String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  messages  ChatMessage[]
-  members   GroupMember[]
+  description    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  messages       ChatMessage[]
+  members        GroupMember[]
   permissions    GroupPermission[]
 }
 
 model GroupPermission {
-  id            String   @id @default(uuid())
-  groupId       String   
-  canEditSettings  Boolean @default(false) // Permission to edit group name/description
-  canSendMessage    Boolean @default(true)  // Permission to send messages
-  canAddMembers     Boolean @default(false) // Permission to add members
-  group         ChatGroup   @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String    @id @default(uuid())
+  groupId         String
+  canEditSettings Boolean   @default(false) // Permission to edit group name/description
+  canSendMessage  Boolean   @default(true) // Permission to send messages
+  canAddMembers   Boolean   @default(false) // Permission to add members
+  group           ChatGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 enum GroupMemberTitle {
@@ -148,31 +143,29 @@ enum GroupMemberTitle {
 }
 
 model GroupMember {
-  id       String   @id @default(uuid())
+  id       String           @id @default(uuid())
   groupId  String
   userId   String
   title    GroupMemberTitle @default(Member)
-  joinedAt DateTime @default(now())
+  joinedAt DateTime         @default(now())
 
-  group    ChatGroup @relation(fields: [groupId], references: [id])
-  user     User      @relation(fields: [userId], references: [id])
+  group ChatGroup @relation(fields: [groupId], references: [id])
+  user  User      @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-   @@unique([userId, groupId])
+  @@unique([userId, groupId])
 }
 
-
-model ESignature{
-  id String @id @default(uuid())
+model ESignature {
+  id   String @id @default(uuid())
   path String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user_id String @unique
-  user User @relation(fields: [user_id], references: [id])
-  documentsSigned Documents[]
-
+  user_id         String      @unique
+  user            User        @relation(fields: [user_id], references: [id])
+  documentsSigned Documents[]
 }
