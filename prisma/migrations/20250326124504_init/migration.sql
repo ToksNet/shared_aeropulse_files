@@ -40,6 +40,7 @@ CREATE TABLE `Documents` (
     `path` VARCHAR(512) NULL,
     `mime_type` VARCHAR(512) NULL,
     `content` VARCHAR(512) NULL,
+    `department` VARCHAR(512) NOT NULL,
     `native` BOOLEAN NOT NULL,
     `deleted` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
