@@ -54,7 +54,7 @@ export class CreateActivitiesDto {
   @ApiProperty({ description: "ID of the author" })
   @IsString()
   @IsNotEmpty()
-  authorId: string = '';
+  author_id: string = '';
 
   @ApiProperty({ description: "ID of the document" })
   @IsString()
@@ -77,10 +77,20 @@ export class CreateDocumentDto {
   @IsString()
   content: string = '';
 
+  @ApiProperty({ description: "department the document belongs to" })
+  @IsNotEmpty()
+  @IsString()
+  department: string = '';
+
   @ApiProperty({ description: "Indicates if the document is native", default: true })
   @IsNotEmpty()
   @IsBoolean()
   native: boolean = true;
+
+  @ApiProperty({ description: "Indicates if the document is marked as favorite", default: true })
+  @IsOptional()
+  @IsBoolean()
+  starred: boolean = false;
 }
 
 
