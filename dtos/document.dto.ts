@@ -46,9 +46,9 @@ export class CreateActivitiesDto {
 
   @ApiProperty({ 
     description: "The type of Activity", 
-    enum: DocumentPermissionType 
+    enum: ActivityType 
   })
-  @IsEnum(DocumentPermissionType)
+  @IsEnum(ActivityType)
   @IsNotEmpty()
   type: ActivityType = ActivityType.OTHER;
 
