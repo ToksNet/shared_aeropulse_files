@@ -42,6 +42,7 @@ CREATE TABLE `Documents` (
     `content` VARCHAR(512) NULL,
     `department` VARCHAR(512) NOT NULL,
     `native` BOOLEAN NOT NULL,
+    `starred` BOOLEAN NOT NULL,
     `deleted` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -61,6 +62,32 @@ CREATE TABLE `Folders` (
     `updatedAt` DATETIME(3) NOT NULL,
     `author_id` VARCHAR(191) NOT NULL,
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Activities` (
+    `id` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(512) NOT NULL,
+    `type` ENUM('DOCUMENT_CREATED', 'DOCUMENT_UPDATED', 'DOCUMENT_DELETED', 'DOCUMENT_SHARED', 'DOCUMENT_SIGNED', 'OTHER') NOT NULL DEFAULT 'OTHER',
+    `documentId` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `author_id` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `DocumentUserPermission` (
+    `id` VARCHAR(191) NOT NULL,
+    `permission` ENUM('VIEW', 'EDIT', 'OWNER') NOT NULL,
+    `documentId` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `DocumentUserPermission_documentId_userId_key`(`documentId`, `userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -160,6 +187,18 @@ ALTER TABLE `Documents` ADD CONSTRAINT `Documents_ESignature_id_fkey` FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE `Folders` ADD CONSTRAINT `Folders_author_id_fkey` FOREIGN KEY (`author_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Activities` ADD CONSTRAINT `Activities_documentId_fkey` FOREIGN KEY (`documentId`) REFERENCES `Documents`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Activities` ADD CONSTRAINT `Activities_author_id_fkey` FOREIGN KEY (`author_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DocumentUserPermission` ADD CONSTRAINT `DocumentUserPermission_documentId_fkey` FOREIGN KEY (`documentId`) REFERENCES `Documents`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DocumentUserPermission` ADD CONSTRAINT `DocumentUserPermission_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ChatMessage` ADD CONSTRAINT `ChatMessage_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
