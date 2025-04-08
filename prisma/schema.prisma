@@ -100,7 +100,7 @@ model Folders {
 model Activities {
   id          String       @id @default(uuid())
   description String       @db.VarChar(512)
-  type        ActivityType @default(OTHER)
+  type        ActivityType
   documentId  String?
   document    Documents?   @relation(fields: [documentId], references: [id])
 
