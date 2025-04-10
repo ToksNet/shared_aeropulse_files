@@ -146,6 +146,7 @@ model ChatMessage {
   senderId    String
   recipientId String?
   groupId     String? // null means private/direct message
+  deletedBy   String[]     @default([])
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   attachments Attachment[]
@@ -153,6 +154,15 @@ model ChatMessage {
   sender    User       @relation("SentMessages", fields: [senderId], references: [id])
   recipient User?      @relation("ReceivedMessages", fields: [recipientId], references: [id])
   group     ChatGroup? @relation(fields: [groupId], references: [id])
+}
+
+model ChatList {
+  id        String   @id @default(uuid())
+  userId    String
+  chatId    String // Combination of senderId and recipientId or groupId
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Attachment {
