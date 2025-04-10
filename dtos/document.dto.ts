@@ -50,7 +50,7 @@ export class CreateActivitiesDto {
   })
   @IsEnum(ActivityType)
   @IsNotEmpty()
-  type: ActivityType = ActivityType.OTHER;
+  activityType: ActivityType = ActivityType.OTHER;
 
   @ApiProperty({ description: "ID of the author" })
   @IsString()
