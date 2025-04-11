@@ -39,6 +39,7 @@ model User {
   ESignature ESignature?
 
   DocumentUserPermission DocumentUserPermission[]
+  DeletedMessage         DeletedMessage[]
 }
 
 enum UserRole {
