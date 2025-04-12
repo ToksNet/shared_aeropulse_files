@@ -176,7 +176,7 @@ model ChatList {
 
   user User @relation(fields: [userId], references: [id])
 
-   @@unique([userId, chatId])
+    @@unique([userId, chatId], name: "userId_chatId")
 }
 
 model Attachment {
