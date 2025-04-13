@@ -1,5 +1,5 @@
-import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 
 export class RegisterUserDto {
   @ApiProperty({ description: 'User email address', example: 'user@example.com' })
@@ -48,6 +48,8 @@ export class RegisterUserDto {
   inviteToken?: string;
 }
 
+export class UpdateUserDto extends PartialType(RegisterUserDto) {
+}
 
 export class InviteUserDto {
   @ApiProperty({ description: 'Invited User email via address', example: 'user@example.com' })
@@ -79,6 +81,13 @@ export class LoginUserDto {
   @IsNotEmpty()
   @IsString()
   password: string = '';
+}
+
+export class CreateDepartmentDto {
+  @ApiProperty({ example: 'Engineering', description: 'Name of the department.' })
+  @IsString()
+  @MinLength(2)
+  name: string = '';
 }
 
 
