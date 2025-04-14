@@ -59,7 +59,7 @@ model Department {
 model Invite {
   id         String   @id @default(uuid())
   email      String   @unique
-  role       String
+  role       UserRole    @default(Member)
   department String
   token      String   @unique
   expiresAt  DateTime
