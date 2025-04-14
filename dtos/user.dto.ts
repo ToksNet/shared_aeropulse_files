@@ -26,7 +26,7 @@ export class RegisterUserDto {
   @ApiProperty({ description: 'User role', example: 'Admin' })
   @IsNotEmpty()
   @IsEnum(UserRole)
-  role: UserRole = '';
+  role: UserRole = UserRole.Member;
 
   @ApiProperty({ description: 'User department', example: 'IT' })
   @IsNotEmpty()
@@ -63,7 +63,7 @@ export class InviteUserDto {
   @IsString({ message: 'Role must be a string' })
   @IsNotEmpty({ message: 'Role is required' })
   @IsEnum(UserRole)
-  role: UserRole = '';
+  role: UserRole = UserRole.Member;
 
   @ApiProperty({ description: 'Invited User department', example: 'IT' })
   @IsString({ message: 'Department must be a string' })
