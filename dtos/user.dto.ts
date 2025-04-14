@@ -62,8 +62,8 @@ export class InviteUserDto {
   @ApiProperty({ description: 'Invited role', example: 'Admin or member' })
   @IsString({ message: 'Role must be a string' })
   @IsNotEmpty({ message: 'Role is required' })
-  @MaxLength(50, { message: 'Role must not exceed 50 characters' })
-  role: string = '';
+  @IsEnum(UserRole)
+  role: UserRole = '';
 
   @ApiProperty({ description: 'Invited User department', example: 'IT' })
   @IsString({ message: 'Department must be a string' })
