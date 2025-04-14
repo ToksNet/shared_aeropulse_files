@@ -9,6 +9,7 @@ CREATE TABLE `User` (
     `department` VARCHAR(191) NOT NULL,
     `phoneNumber` VARCHAR(191) NULL,
     `profilePicture` VARCHAR(191) NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -18,10 +19,22 @@ CREATE TABLE `User` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Department` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `Department_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Invite` (
     `id` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `role` VARCHAR(191) NOT NULL,
+    `role` ENUM('Admin', 'Member') NOT NULL DEFAULT 'Member',
     `department` VARCHAR(191) NOT NULL,
     `token` VARCHAR(191) NOT NULL,
     `expiresAt` DATETIME(3) NOT NULL,
