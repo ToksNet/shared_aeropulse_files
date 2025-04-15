@@ -41,8 +41,6 @@ model User {
 
   DocumentUserPermission DocumentUserPermission[]
   DeletedMessage         DeletedMessage[]
-  createdAt   DateTime @default(now()) 
-  updatedAt  DateTime @updatedAt
 }
 
 enum UserRole {
