@@ -32,7 +32,7 @@ model User {
   sentMessages     ChatMessage[] @relation("SentMessages")
   receivedMessages ChatMessage[] @relation("ReceivedMessages")
   groups           GroupMember[]
-  chatLists         ChatList[]
+  chatLists        ChatList[]
 
   Folders    Folders[]    @relation("author")
   Activities Activities[] @relation("author")
@@ -41,6 +41,10 @@ model User {
 
   DocumentUserPermission DocumentUserPermission[]
   DeletedMessage         DeletedMessage[]
+
+  Notification Notification[] @relation("SentNotification")
+
+  ReceivedNotification Notification[]
 }
 
 enum UserRole {
@@ -49,17 +53,17 @@ enum UserRole {
 }
 
 model Department {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  isActive          Boolean     @default(true)
-  createdAt   DateTime @default(now()) 
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Invite {
   id         String   @id @default(uuid())
   email      String   @unique
-  role       UserRole    @default(Member)
+  role       UserRole @default(Member)
   department String
   token      String   @unique
   expiresAt  DateTime
@@ -68,17 +72,18 @@ model Invite {
 }
 
 model Documents {
-  id         String   @id @default(uuid())
-  file_name  String   @unique @db.VarChar(512)
-  path       String?  @db.VarChar(512)
-  mime_type  String?  @db.VarChar(512)
-  content    String?  @db.VarChar(512)
-  department String   @db.VarChar(512)
-  native     Boolean
-  starred    Boolean
-  deleted    Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            String       @id @default(uuid())
+  file_name     String       @unique @db.VarChar(512)
+  path          String?      @db.VarChar(512)
+  mime_type     String?      @db.VarChar(512)
+  document_type DocumentType @default(FILE)
+  content       String?      @db.LongText
+  department    String       @db.VarChar(512)
+  native        Boolean
+  starred       Boolean
+  deleted       Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   // relations
   author_id        String
@@ -95,9 +100,15 @@ model Documents {
   DocumentUserPermission DocumentUserPermission[]
 }
 
+enum DocumentType {
+  FOLDER
+  FILE
+}
+
 model Folders {
-  id   String @id @default(uuid())
-  name String @db.VarChar(512)
+  id            String       @id @default(uuid())
+  name          String       @db.VarChar(512)
+  document_type DocumentType @default(FOLDER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -169,13 +180,13 @@ model ChatMessage {
 }
 
 model DeletedMessage {
-  id          String       @id @default(uuid())
-  messageId   String
-  userId      String
-  message     ChatMessage  @relation(fields: [messageId], references: [id])
-  user        User         @relation(fields: [userId], references: [id])
-  createdAt   DateTime     @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String      @id @default(uuid())
+  messageId String
+  userId    String
+  message   ChatMessage @relation(fields: [messageId], references: [id])
+  user      User        @relation(fields: [userId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 model ChatList {
@@ -183,11 +194,22 @@ model ChatList {
   userId    String
   chatId    String // Combination of senderId and recipientId or groupId
   createdAt DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id])
 
-    @@unique([userId, chatId], name: "userId_chatId")
+  @@unique([userId, chatId], name: "userId_chatId")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  content   String?  @db.LongText
+  senderId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sender     User   @relation("SentNotification", fields: [senderId], references: [id])
+  recipients User[]
 }
 
 model Attachment {

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export enum DocumentPermissionType {
   VIEW = "VIEW",
@@ -15,6 +15,11 @@ export enum ActivityType {
   DOCUMENT_SHARED = "DOCUMENT_SHARED",
   DOCUMENT_SIGNED = "DOCUMENT_SIGNED",
   OTHER = "OTHER"
+}
+
+export enum DocumentType {
+  FOLDER = "FOLDER",
+  FILE = "FILE",
 }
 
 export class CreateDocumentPermissionDto {
@@ -78,6 +83,14 @@ export class CreateDocumentDto {
   @IsString()
   content: string = '';
 
+  @ApiProperty({ 
+    description: "Type of the document", 
+    enum: ActivityType 
+   })
+  @IsNotEmpty()
+  @IsEnum(DocumentType)
+  document_type: string = '';
+
   @ApiProperty({ description: "department the document belongs to" })
   @IsNotEmpty()
   @IsString()
@@ -125,6 +138,36 @@ export class UpdateDocumentDto {
   @IsOptional()
   @IsBoolean()
   starred?: boolean = false;
+}
+
+
+export class DeleteDocumentDto {
+  @ApiProperty({ description: "Indicates if the document is deleted", default: false })
+  @IsOptional()
+  @IsBoolean()
+  deleted: boolean = false;
+}
+
+
+export class StarDocumentDto {
+  @ApiProperty({ description: "Indicates if the document is deleted", default: false })
+  @IsOptional()
+  @IsBoolean()
+  Starred: boolean = false;
+}
+
+export class ShareDocumentDto {
+  @ApiProperty({ description: "ID of the User you want to share the document with document" })
+  @IsNotEmpty()
+  @IsString()
+  sharedUserId: string = '';
+}
+
+export class ShareDocumentWithUsersDto {
+  @ApiProperty({ description: "ID of the Users you want to share the document with document" })
+  @IsNotEmpty()
+  @IsArray()
+  sharedUserIds: string[] = [];
 }
 
 export class UploadDocumentDto {
