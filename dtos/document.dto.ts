@@ -105,6 +105,11 @@ export class CreateDocumentDto {
   @IsOptional()
   @IsBoolean()
   starred: boolean = false;
+  
+  @ApiProperty({ description: "Folder ID of the document" })
+  @IsOptional()
+  @IsString()
+  folder_id?: string = '';
 }
 
 
@@ -138,12 +143,17 @@ export class UpdateDocumentDto {
   @IsOptional()
   @IsBoolean()
   starred?: boolean = false;
+  
+  @ApiProperty({ description: "Folder ID of the document" })
+  @IsOptional()
+  @IsString()
+  folder_id?: string = '';
 }
 
 
 export class DeleteDocumentDto {
   @ApiProperty({ description: "Indicates if the document is deleted", default: false })
-  @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
   deleted: boolean = false;
 }
@@ -151,9 +161,17 @@ export class DeleteDocumentDto {
 
 export class StarDocumentDto {
   @ApiProperty({ description: "Indicates if the document is deleted", default: false })
-  @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
   Starred: boolean = false;
+}
+
+
+export class MoveDocumentDto {
+  @ApiProperty({ description: "Folder ID of the document" })
+  @IsNotEmpty()
+  @IsString()
+  folder_id: string = '';
 }
 
 export class ShareDocumentDto {
@@ -179,6 +197,7 @@ export class UploadDocumentDto {
   @IsNotEmpty()
   @IsString()
   author_id: string = '';
+  
 
   @ApiProperty({ description: "File storage path" })
   @IsNotEmpty()
@@ -194,6 +213,11 @@ export class UploadDocumentDto {
   @IsNotEmpty()
   @IsBoolean()
   native: boolean = false;
+  
+  @ApiProperty({ description: "Folder ID of the document" })
+  @IsOptional()
+  @IsString()
+  folder_id?: string = '';
 }
 
 
