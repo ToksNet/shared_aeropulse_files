@@ -11,6 +11,7 @@ export enum ActivityType {
   DOCUMENT_CREATED = "DOCUMENT_CREATED",
   DOCUMENT_UPDATED = "DOCUMENT_UPDATED",
   DOCUMENT_MOVED_TO_TRASH = "DOCUMENT_MOVED_TO_TRASH",
+  DOCUMENT_MOVED_TO_FOLDER = "DOCUMENT_MOVED_TO_FOLDER",
   DOCUMENT_DELETED = "DOCUMENT_DELETED",
   DOCUMENT_SHARED = "DOCUMENT_SHARED",
   DOCUMENT_SIGNED = "DOCUMENT_SIGNED",
@@ -85,11 +86,11 @@ export class CreateDocumentDto {
 
   @ApiProperty({ 
     description: "Type of the document", 
-    enum: ActivityType 
+    enum: DocumentType 
    })
   @IsNotEmpty()
   @IsEnum(DocumentType)
-  document_type: string = '';
+  document_type: DocumentType = DocumentType.FILE
 
   @ApiProperty({ description: "department the document belongs to" })
   @IsNotEmpty()
@@ -213,7 +214,7 @@ export class UploadDocumentDto {
   @IsNotEmpty()
   @IsBoolean()
   native: boolean = false;
-  
+
   @ApiProperty({ description: "Folder ID of the document" })
   @IsOptional()
   @IsString()
