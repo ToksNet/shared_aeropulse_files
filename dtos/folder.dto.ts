@@ -1,11 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
-  
-  export enum DocumentType {
-    FOLDER = "Folder",
-    FILE = "File"
-
-  }
+import { DocumentType } from "./document.dto";
 
 export class CreateFolderDto {
   @ApiProperty({ description: "Name of the folder" })
