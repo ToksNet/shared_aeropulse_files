@@ -221,6 +221,31 @@ export class UploadDocumentDto {
   folder_id?: string = '';
 }
 
+export class NotificationDto {
+  @ApiProperty({
+    description: 'The ID of the user sending the Notification',
+    example: 'user-123',
+  })
+  @IsString()
+  @IsNotEmpty()
+  senderId: string = '';
+
+  @ApiProperty({
+    description: 'The IDs of the recipients receiving The notifications',
+  })
+  @IsArray()
+  @IsNotEmpty()
+  recipientIds?: string[] = [];
+
+
+  @ApiPropertyOptional({
+    description: 'The text content of the Notification.',
+  })
+  @IsOptional()
+  @IsString()
+  content?: string;
+}
+
 
 
 
