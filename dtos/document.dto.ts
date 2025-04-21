@@ -164,7 +164,7 @@ export class StarDocumentDto {
   @ApiProperty({ description: "Indicates if the document is deleted", default: false })
   @IsNotEmpty()
   @IsBoolean()
-  Starred: boolean = false;
+  starred: boolean = false;
 }
 
 
