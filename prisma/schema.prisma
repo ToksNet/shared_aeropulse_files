@@ -202,11 +202,12 @@ model ChatList {
 }
 
 model Notification {
-  id        String   @id @default(uuid())
-  content   String?  @db.LongText
+  id        String    @id @default(uuid())
+  content   String?   @db.LongText
   senderId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   sender     User   @relation("SentNotification", fields: [senderId], references: [id])
   recipients User[]
