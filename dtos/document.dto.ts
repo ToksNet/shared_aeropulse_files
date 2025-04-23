@@ -180,6 +180,14 @@ export class ShareDocumentDto {
   @IsNotEmpty()
   @IsString()
   sharedUserId: string = '';
+
+  @ApiProperty({ 
+    description: "The type of permission to grant", 
+    enum: DocumentPermissionType 
+  })
+  @IsEnum(DocumentPermissionType)
+  @IsNotEmpty()
+  permission: DocumentPermissionType = DocumentPermissionType.VIEW;
 }
 
 export class ShareDocumentWithUsersDto {
@@ -187,6 +195,14 @@ export class ShareDocumentWithUsersDto {
   @IsNotEmpty()
   @IsArray()
   sharedUserIds: string[] = [];
+
+  @ApiProperty({ 
+    description: "The type of permission to grant", 
+    enum: DocumentPermissionType 
+  })
+  @IsEnum(DocumentPermissionType)
+  @IsNotEmpty()
+  permission: DocumentPermissionType = DocumentPermissionType.VIEW;
 }
 
 export class UploadDocumentDto {
