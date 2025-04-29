@@ -92,4 +92,7 @@ export class CreateDepartmentDto {
   name: string = '';
 }
 
+export class UpdateDepartmentDto extends PartialType(CreateDepartmentDto) {
+}
+
 
