@@ -217,10 +217,18 @@ model Attachment {
   id            String      @id @default(uuid())
   url           String
   fileType      String? // optional field to store file type or extension
+  type          AttachmentType?
   chatMessageId String
   chatMessage   ChatMessage @relation(fields: [chatMessageId], references: [id])
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+}
+
+enum AttachmentType {
+  LINK
+  IMAGE
+  VIDEO
+  DOCUMENT
 }
 
 model ChatGroup {
