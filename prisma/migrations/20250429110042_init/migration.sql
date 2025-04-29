@@ -52,7 +52,8 @@ CREATE TABLE `Documents` (
     `file_name` VARCHAR(512) NOT NULL,
     `path` VARCHAR(512) NULL,
     `mime_type` VARCHAR(512) NULL,
-    `content` VARCHAR(512) NULL,
+    `document_type` ENUM('FOLDER', 'FILE') NOT NULL DEFAULT 'FILE',
+    `content` LONGTEXT NULL,
     `department` VARCHAR(512) NOT NULL,
     `native` BOOLEAN NOT NULL,
     `starred` BOOLEAN NOT NULL,
@@ -71,6 +72,7 @@ CREATE TABLE `Documents` (
 CREATE TABLE `Folders` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(512) NOT NULL,
+    `document_type` ENUM('FOLDER', 'FILE') NOT NULL DEFAULT 'FOLDER',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `author_id` VARCHAR(191) NOT NULL,
@@ -141,10 +143,23 @@ CREATE TABLE `ChatList` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Notification` (
+    `id` VARCHAR(191) NOT NULL,
+    `content` LONGTEXT NULL,
+    `senderId` VARCHAR(191) NOT NULL,
+    `readAt` DATETIME(3) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Attachment` (
     `id` VARCHAR(191) NOT NULL,
     `url` VARCHAR(191) NOT NULL,
     `fileType` VARCHAR(191) NULL,
+    `type` ENUM('LINK', 'IMAGE', 'VIDEO', 'DOCUMENT') NULL,
     `chatMessageId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -212,6 +227,15 @@ CREATE TABLE `_authorized_users` (
     INDEX `_authorized_users_B_index`(`B`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `_NotificationToUser` (
+    `A` VARCHAR(191) NOT NULL,
+    `B` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `_NotificationToUser_AB_unique`(`A`, `B`),
+    INDEX `_NotificationToUser_B_index`(`B`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Documents` ADD CONSTRAINT `Documents_author_id_fkey` FOREIGN KEY (`author_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -255,6 +279,9 @@ ALTER TABLE `DeletedMessage` ADD CONSTRAINT `DeletedMessage_userId_fkey` FOREIGN
 ALTER TABLE `ChatList` ADD CONSTRAINT `ChatList_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Notification` ADD CONSTRAINT `Notification_senderId_fkey` FOREIGN KEY (`senderId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Attachment` ADD CONSTRAINT `Attachment_chatMessageId_fkey` FOREIGN KEY (`chatMessageId`) REFERENCES `ChatMessage`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -274,3 +301,9 @@ ALTER TABLE `_authorized_users` ADD CONSTRAINT `_authorized_users_A_fkey` FOREIG
 
 -- AddForeignKey
 ALTER TABLE `_authorized_users` ADD CONSTRAINT `_authorized_users_B_fkey` FOREIGN KEY (`B`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_NotificationToUser` ADD CONSTRAINT `_NotificationToUser_A_fkey` FOREIGN KEY (`A`) REFERENCES `Notification`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_NotificationToUser` ADD CONSTRAINT `_NotificationToUser_B_fkey` FOREIGN KEY (`B`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
