@@ -44,6 +44,16 @@ export class CreateDocumentPermissionDto {
   documentId: string = '';
 }
 
+export class updateDocumentPermissionDto {
+  @ApiProperty({ 
+    description: "The type of permission to grant", 
+    enum: DocumentPermissionType 
+  })
+  @IsEnum(DocumentPermissionType)
+  @IsNotEmpty()
+  permission: DocumentPermissionType = DocumentPermissionType.VIEW;
+}
+
 export class CreateActivitiesDto {
   
   @ApiProperty({ description: "description of the activity" })
