@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Documents } from "@prisma/client";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export enum DocumentPermissionType {
@@ -23,6 +24,13 @@ export enum ActivityType {
 export enum DocumentType {
   FOLDER = "FOLDER",
   FILE = "FILE",
+}
+
+
+export interface DocumentResponseDTO{
+  success: boolean
+  message : string
+  document?: Documents
 }
 
 export class CreateDocumentPermissionDto {
