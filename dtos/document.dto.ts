@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { Documents } from "@prisma/client";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export enum DocumentPermissionType {
@@ -15,6 +16,7 @@ export enum ActivityType {
   DOCUMENT_DELETED = "DOCUMENT_DELETED",
   DOCUMENT_SHARED = "DOCUMENT_SHARED",
   DOCUMENT_STARRED = "DOCUMENT_STARRED",
+  DOCUMENT_UNSTARRED = "DOCUMENT_UNSTARRED",
   DOCUMENT_SIGNED = "DOCUMENT_SIGNED",
   OTHER = "OTHER"
 }
@@ -22,6 +24,13 @@ export enum ActivityType {
 export enum DocumentType {
   FOLDER = "FOLDER",
   FILE = "FILE",
+}
+
+
+export interface DocumentResponseDTO{
+  success: boolean
+  message : string
+  document?: Documents
 }
 
 export class CreateDocumentPermissionDto {
@@ -42,6 +51,16 @@ export class CreateDocumentPermissionDto {
   @IsString()
   @IsNotEmpty()
   documentId: string = '';
+}
+
+export class updateDocumentPermissionDto {
+  @ApiProperty({ 
+    description: "The type of permission to grant", 
+    enum: DocumentPermissionType 
+  })
+  @IsEnum(DocumentPermissionType)
+  @IsNotEmpty()
+  permission: DocumentPermissionType = DocumentPermissionType.VIEW;
 }
 
 export class CreateActivitiesDto {
