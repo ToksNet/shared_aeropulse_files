@@ -169,6 +169,12 @@ export class UpdateDocumentDto {
   @IsOptional()
   @IsString()
   folder_id?: string = '';
+
+  
+  @ApiProperty({ description: "Modifier's ID of the document" })
+  @IsOptional()
+  @IsString()
+  modified_by?: string = '';
 }
 
 
