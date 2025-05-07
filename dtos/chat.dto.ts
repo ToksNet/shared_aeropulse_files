@@ -2,6 +2,16 @@ import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsOptional, IsArray, IsBoolean } from 'class-validator';
 
 export class ChatMessageDto {
+  @ApiProperty({ description: 'Unique message ID (for ack)', example: 'uuid-123', required: false })
+  @IsOptional()
+  @IsString()
+  id?: string;
+
+  @ApiProperty({ description: 'Action: send a new message or ack a received one', example: 'send' })
+  @IsString()
+  @IsNotEmpty()
+  action!: 'send' | 'ack';
+
   @ApiProperty({
     description: 'The ID of the user sending the message',
     example: 'user-123',
@@ -41,6 +51,11 @@ export class ChatMessageDto {
   @IsOptional()
   @IsString()
   attachments?: string[];
+
+  @ApiPropertyOptional({ description: 'ID of the message being acknowledged (only for ack)', example: 'uuid-123' })
+  @IsOptional()
+  @IsString()
+  ackForMessageId?: string;
 }
 
 export class UpdateChatMessageDto extends PartialType(ChatMessageDto) {}
