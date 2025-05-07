@@ -14,20 +14,21 @@ datasource db {
 }
 
 model User {
-  id                String      @id @default(uuid())
-  email             String      @unique
-  password          String
-  firstName         String
-  lastName          String
-  role              UserRole    @default(Member)
-  department        String
-  phoneNumber       String?     @unique
-  profilePicture    String?
-  isActive          Boolean     @default(true)
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  Documents         Documents[] @relation("authorized_users")
-  Documents_created Documents[] @relation("author")
+  id                 String      @id @default(uuid())
+  email              String      @unique
+  password           String
+  firstName          String
+  lastName           String
+  role               UserRole    @default(Member)
+  department         String
+  phoneNumber        String?     @unique
+  profilePicture     String?
+  isActive           Boolean     @default(true)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  Documents          Documents[] @relation("authorized_users")
+  Documents_created  Documents[] @relation("author")
+  Documents_modified Documents[] @relation("modifier")
 
   sentMessages     ChatMessage[] @relation("SentMessages")
   receivedMessages ChatMessage[] @relation("ReceivedMessages")
@@ -86,6 +87,8 @@ model Documents {
   updatedAt     DateTime     @updatedAt
 
   // relations
+  modified_by      String?
+  modifier         User?    @relation("modifier", fields: [modified_by], references: [id])
   author_id        String
   author           User     @relation("author", fields: [author_id], references: [id])
   folder_id        String?
@@ -218,14 +221,14 @@ model Notification {
 }
 
 model Attachment {
-  id            String      @id @default(uuid())
+  id            String          @id @default(uuid())
   url           String
   fileType      String? // optional field to store file type or extension
   type          AttachmentType?
   chatMessageId String
-  chatMessage   ChatMessage @relation(fields: [chatMessageId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  chatMessage   ChatMessage     @relation(fields: [chatMessageId], references: [id])
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 }
 
 enum AttachmentType {
