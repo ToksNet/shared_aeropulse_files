@@ -170,7 +170,6 @@ export class UpdateDocumentDto {
   @IsString()
   folder_id?: string = '';
 
-  
   @ApiProperty({ description: "Modifier's ID of the document" })
   @IsOptional()
   @IsString()
