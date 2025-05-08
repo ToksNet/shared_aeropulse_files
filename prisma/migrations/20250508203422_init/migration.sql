@@ -60,6 +60,7 @@ CREATE TABLE `Documents` (
     `deleted` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `modified_by` VARCHAR(191) NULL,
     `author_id` VARCHAR(191) NOT NULL,
     `folder_id` VARCHAR(191) NULL,
     `ESignature_id` VARCHAR(191) NULL,
@@ -84,7 +85,7 @@ CREATE TABLE `Folders` (
 CREATE TABLE `Activities` (
     `id` VARCHAR(191) NOT NULL,
     `description` VARCHAR(512) NOT NULL,
-    `activityType` ENUM('DOCUMENT_CREATED', 'DOCUMENT_UPDATED', 'DOCUMENT_DELETED', 'DOCUMENT_SHARED', 'DOCUMENT_SIGNED', 'OTHER') NOT NULL,
+    `activityType` ENUM('DOCUMENT_CREATED', 'DOCUMENT_UPDATED', 'DOCUMENT_DELETED', 'DOCUMENT_SHARED', 'DOCUMENT_STARRED', 'DOCUMENT_UNSTARRED', 'DOCUMENT_SIGNED', 'DOCUMENT_MOVED_TO_TRASH', 'DOCUMENT_MOVED_TO_FOLDER', 'OTHER') NOT NULL,
     `documentId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -113,6 +114,7 @@ CREATE TABLE `ChatMessage` (
     `senderId` VARCHAR(191) NOT NULL,
     `recipientId` VARCHAR(191) NULL,
     `groupId` VARCHAR(191) NULL,
+    `callSessionId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -219,6 +221,29 @@ CREATE TABLE `ESignature` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `CallSession` (
+    `id` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `initiatorId` VARCHAR(191) NOT NULL,
+    `isActive` BOOLEAN NOT NULL DEFAULT true,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `SessionParticipant` (
+    `id` VARCHAR(191) NOT NULL,
+    `callSessionId` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `isHandRaised` BOOLEAN NOT NULL DEFAULT false,
+    `isScreenSharing` BOOLEAN NOT NULL DEFAULT false,
+    `joinedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `_authorized_users` (
     `A` VARCHAR(191) NOT NULL,
     `B` VARCHAR(191) NOT NULL,
@@ -235,6 +260,9 @@ CREATE TABLE `_NotificationToUser` (
     UNIQUE INDEX `_NotificationToUser_AB_unique`(`A`, `B`),
     INDEX `_NotificationToUser_B_index`(`B`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Documents` ADD CONSTRAINT `Documents_modified_by_fkey` FOREIGN KEY (`modified_by`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Documents` ADD CONSTRAINT `Documents_author_id_fkey` FOREIGN KEY (`author_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -270,6 +298,9 @@ ALTER TABLE `ChatMessage` ADD CONSTRAINT `ChatMessage_recipientId_fkey` FOREIGN 
 ALTER TABLE `ChatMessage` ADD CONSTRAINT `ChatMessage_groupId_fkey` FOREIGN KEY (`groupId`) REFERENCES `ChatGroup`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `ChatMessage` ADD CONSTRAINT `ChatMessage_callSessionId_fkey` FOREIGN KEY (`callSessionId`) REFERENCES `CallSession`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `DeletedMessage` ADD CONSTRAINT `DeletedMessage_messageId_fkey` FOREIGN KEY (`messageId`) REFERENCES `ChatMessage`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -295,6 +326,12 @@ ALTER TABLE `GroupMember` ADD CONSTRAINT `GroupMember_userId_fkey` FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE `ESignature` ADD CONSTRAINT `ESignature_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `SessionParticipant` ADD CONSTRAINT `SessionParticipant_callSessionId_fkey` FOREIGN KEY (`callSessionId`) REFERENCES `CallSession`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `SessionParticipant` ADD CONSTRAINT `SessionParticipant_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_authorized_users` ADD CONSTRAINT `_authorized_users_A_fkey` FOREIGN KEY (`A`) REFERENCES `Documents`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
