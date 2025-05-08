@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsInt, IsString, IsOptional, IsArray, IsObject, IsBoolean  } from 'class-validator';
 
 
 export class CreateCallDto {
   @ApiProperty({ description: 'Initiator user ID' })
-  @IsString() initiatorId: string;
+  @IsString() initiatorId: string = '';
 
   @ApiPropertyOptional({ description: 'Invitee user IDs', type: [String] })
   @IsOptional() @IsArray() @IsString({ each: true })
@@ -14,17 +14,17 @@ export class CreateCallDto {
   // src/dtos/join-call.dto.ts
   export class JoinCallDto {
     @ApiProperty({ description: 'Call session ID' })
-    @IsInt() callSessionId: number;
+    @IsString() callSessionId: string = '';
   
     @ApiProperty({ description: 'User ID joining' })
-    @IsString() userId: string;
+    @IsString() userId: string = '';
   }
 
   // src/dtos/send-offer.dto.ts
   export class SendOfferDto {
-    @ApiProperty() @IsInt() callSessionId: number;
-    @ApiProperty() @IsString() senderId: string;
-    @ApiProperty() @IsString() receiverId: string;
+    @ApiProperty() @IsInt() callSessionId: string = '';
+    @ApiProperty() @IsString() senderId: string = '';
+    @ApiProperty() @IsString() receiverId: string = ''; 
     @ApiProperty() @IsObject() offer: any;
   }
 
@@ -32,15 +32,15 @@ export class CreateCallDto {
 export class SendAnswerDto {
   @ApiProperty({ description: 'Call session ID' })
   @IsInt()
-  callSessionId: number;
+  callSessionId: string = '';
 
   @ApiProperty({ description: 'Sender user ID' })
   @IsString()
-  senderId: string;
+  senderId: string = '';
 
   @ApiProperty({ description: 'Receiver user ID' })
   @IsString()
-  receiverId: string;
+  receiverId: string = '';
 
   @ApiProperty({ description: 'SDP answer payload' })
   @IsObject()
@@ -51,15 +51,15 @@ export class SendAnswerDto {
   export class SendIceDto {
     @ApiProperty({ description: 'Call session ID' })
     @IsInt()
-    callSessionId: number;
+    callSessionId: string = '';
   
     @ApiProperty({ description: 'Sender user ID' })
     @IsString()
-    senderId: string;
+    senderId: string = '';
   
     @ApiProperty({ description: 'Receiver user ID' })
     @IsString()
-    receiverId: string;
+    receiverId: string = '';
   
     @ApiProperty({ description: 'ICE candidate object' })
     @IsObject()
@@ -70,50 +70,50 @@ export class SendAnswerDto {
   export class RaiseHandDto {
     @ApiProperty({ description: 'Call session ID' })
     @IsInt()
-    callSessionId: number;
+    callSessionId: string = '';
   
     @ApiProperty({ description: 'User ID raising hand' })
     @IsString()
-    userId: string;
+    userId: string = '';
   }
 
   // src/dtos/toggle-screen.dto.ts
   export class ToggleScreenDto {
     @ApiProperty({ description: 'Call session ID' })
     @IsInt()
-    callSessionId: number;
+    callSessionId: string = '';
   
     @ApiProperty({ description: 'User ID toggling screen share' })
     @IsString()
-    userId: string;
+    userId: string = '';
   
     @ApiProperty({
       description: 'true = start sharing, false = stop sharing',
     })
     @IsBoolean()
-    isSharing: boolean;
+    isSharing!: boolean;
   }
 
 
   export class InCallChatDto {
     @ApiProperty({ description: 'Video call session ID' })
-    @IsInt() callSessionId: number;
+    @IsInt() callSessionId: string = '';
   
     @ApiProperty({ description: 'User ID sending the message' })
-    @IsString() senderId: string;
+    @IsString() senderId: string = '';
   
     @ApiProperty({ description: 'Chat message content' })
-    @IsString() message: string;
+    @IsString() message: string = '';
   }
 
   // src/dtos/leave-call.dto.ts
   export class LeaveCallDto {
     @ApiProperty({ description: 'Call session ID' })
     @IsInt()
-    callSessionId: number;
+    callSessionId: string = '';
   
     @ApiProperty({ description: 'User ID leaving the call' })
     @IsString()
-    userId: string;
+    userId: string = '';
   }
   
