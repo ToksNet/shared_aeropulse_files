@@ -177,7 +177,7 @@ model ChatMessage {
   senderId    String
   recipientId String?
   groupId     String? // null means private/direct message
-  callSessionId  Int? 
+  callSessionId  String? 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   attachments Attachment[]
