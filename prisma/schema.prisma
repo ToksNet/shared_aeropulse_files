@@ -317,4 +317,5 @@ model SessionParticipant {
   isHandRaised   Boolean     @default(false)
   isScreenSharing Boolean    @default(false)
   joinedAt       DateTime    @default(now())
+  leftAt          DateTime?
 }
