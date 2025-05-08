@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Documents } from "@prisma/client";
+import { Transform } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export enum DocumentPermissionType {
@@ -201,6 +202,8 @@ export class MoveDocumentDto {
 }
 
 export class ShareDocumentDto {
+  @Transform(({ value }) => (Array.isArray(value) ? value : Array(value)))
+  
   @ApiProperty({ description: "ID of the User you want to share the document with document" })
   @IsNotEmpty()
   @IsString()
