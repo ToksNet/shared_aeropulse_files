@@ -172,6 +172,7 @@ model ChatMessage {
   senderId    String
   recipientId String?
   groupId     String? // null means private/direct message
+  callSessionId  Int? 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   attachments Attachment[]
@@ -179,7 +180,7 @@ model ChatMessage {
   sender    User       @relation("SentMessages", fields: [senderId], references: [id])
   recipient User?      @relation("ReceivedMessages", fields: [recipientId], references: [id])
   group     ChatGroup? @relation(fields: [groupId], references: [id])
-
+  callSession    CallSession? @relation(fields: [callSessionId], references: [id])
   deletedMessages DeletedMessage[]
 }
 
@@ -289,4 +290,25 @@ model ESignature {
   user_id         String      @unique
   user            User        @relation(fields: [user_id], references: [id])
   documentsSigned Documents[]
+}
+
+
+model CallSession {
+  id             String               @id @default(uuid())
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  initiatorId    String               // user who started the call
+  isActive       Boolean              @default(true)
+  participants   SessionParticipant[] // relation: participants in this call
+  chatMessages   ChatMessage[]        // relation: chat messages in this call
+}
+
+model SessionParticipant {
+  id             String           @id @default(uuid())
+  callSession    CallSession @relation(fields: [callSessionId], references: [id])
+  callSessionId  Int
+  userId         String      // ID of the user
+  isHandRaised   Boolean     @default(false)
+  isScreenSharing Boolean    @default(false)
+  joinedAt       DateTime    @default(now())
 }
