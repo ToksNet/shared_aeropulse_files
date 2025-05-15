@@ -180,13 +180,13 @@ model ChatMessage {
   callSessionId  String? 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  attachments Attachment[]
+  attachments Attachment[] @relation(onDelete: Cascade)
 
   sender    User       @relation("SentMessages", fields: [senderId], references: [id])
   recipient User?      @relation("ReceivedMessages", fields: [recipientId], references: [id])
   group     ChatGroup? @relation(fields: [groupId], references: [id])
   callSession    CallSession? @relation(fields: [callSessionId], references: [id])
-  deletedMessages DeletedMessage[]
+  deletedMessages DeletedMessage[] @relation(onDelete: Cascade)
 }
 
 model DeletedMessage {
