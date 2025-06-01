@@ -172,31 +172,32 @@ model DocumentUserPermission {
 }
 
 model ChatMessage {
-  id          String       @id @default(uuid())
-  content     String?      @db.LongText
-  senderId    String
-  recipientId String?
-  groupId     String? // null means private/direct message
-  callSessionId  String? 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  attachments Attachment[] @relation(onDelete: Cascade)
+  id            String   @id @default(uuid())
+  content       String?  @db.LongText
+  senderId      String
+  recipientId   String?
+  groupId       String? // null means private/direct message
+  callSessionId String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  // attachments Attachment[] @relation(onDelete: Cascade)
 
-  sender    User       @relation("SentMessages", fields: [senderId], references: [id])
-  recipient User?      @relation("ReceivedMessages", fields: [recipientId], references: [id])
-  group     ChatGroup? @relation(fields: [groupId], references: [id])
-  callSession    CallSession? @relation(fields: [callSessionId], references: [id])
-  deletedMessages DeletedMessage[] @relation(onDelete: Cascade)
+  sender      User         @relation("SentMessages", fields: [senderId], references: [id])
+  recipient   User?        @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  group       ChatGroup?   @relation(fields: [groupId], references: [id])
+  callSession CallSession? @relation(fields: [callSessionId], references: [id])
+  // deletedMessages DeletedMessage[] @relation(onDelete: Cascade)
+  Attachment  Attachment[]
 }
 
 model DeletedMessage {
-  id        String      @id @default(uuid())
+  id        String   @id @default(uuid())
   messageId String
   userId    String
-  message   ChatMessage @relation(fields: [messageId], references: [id])
-  user      User        @relation(fields: [userId], references: [id])
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  // message   ChatMessage @relation(fields: [messageId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ChatList {
@@ -215,6 +216,7 @@ model Notification {
   id        String    @id @default(uuid())
   content   String?   @db.LongText
   senderId  String
+  isRequest Boolean   @default(false)
   readAt    DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -297,25 +299,24 @@ model ESignature {
   documentsSigned Documents[]
 }
 
-
 model CallSession {
-  id             String               @id @default(uuid())
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  initiatorId    String               // user who started the call
-  isActive       Boolean              @default(true)
-  participants   SessionParticipant[] // relation: participants in this call
-  chatMessages   ChatMessage[]        // relation: chat messages in this call
+  id           String               @id @default(uuid())
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  initiatorId  String // user who started the call
+  isActive     Boolean              @default(true)
+  participants SessionParticipant[] // relation: participants in this call
+  chatMessages ChatMessage[] // relation: chat messages in this call
 }
 
 model SessionParticipant {
-  id             String           @id @default(uuid())
-  callSession    CallSession @relation(fields: [callSessionId], references: [id])
-  callSessionId  String
-  userId         String      // ID of the user
-  user  User      @relation(fields: [userId], references: [id])
-  isHandRaised   Boolean     @default(false)
-  isScreenSharing Boolean    @default(false)
-  joinedAt       DateTime    @default(now())
+  id              String      @id @default(uuid())
+  callSession     CallSession @relation(fields: [callSessionId], references: [id])
+  callSessionId   String
+  userId          String // ID of the user
+  user            User        @relation(fields: [userId], references: [id])
+  isHandRaised    Boolean     @default(false)
+  isScreenSharing Boolean     @default(false)
+  joinedAt        DateTime    @default(now())
   leftAt          DateTime?
 }
