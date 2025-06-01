@@ -67,6 +67,21 @@ export class updateDocumentPermissionDto {
   permission: DocumentPermissionType = DocumentPermissionType.VIEW;
 }
 
+export class handleDocumentPermissionDto {
+ 
+  @ApiProperty({ description: "ID of the User you want to grant Permission" })
+  @IsNotEmpty()
+  @IsString()
+  sharedUserId: string = '';
+
+  @ApiProperty({ 
+    description: "Approved or Declined"
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  grant: boolean = false;
+}
+
 export class CreateActivitiesDto {
   
   @ApiProperty({ description: "description of the activity" })
