@@ -20,6 +20,8 @@ export enum ActivityType {
   DOCUMENT_UNSTARRED = "DOCUMENT_UNSTARRED",
   DOCUMENT_SIGNED = "DOCUMENT_SIGNED",
   PERMISSION_REQUEST = "PERMISSION_REQUEST",
+  PERMISSION_GRANTED = "PERMISSION_GRANTED",
+  PERMISSION_DENIED = "PERMISSION_DENIED",
   OTHER = "OTHER"
 }
 
@@ -63,6 +65,21 @@ export class updateDocumentPermissionDto {
   @IsEnum(DocumentPermissionType)
   @IsNotEmpty()
   permission: DocumentPermissionType = DocumentPermissionType.VIEW;
+}
+
+export class handleDocumentPermissionDto {
+ 
+  @ApiProperty({ description: "ID of the User you want to grant Permission" })
+  @IsNotEmpty()
+  @IsString()
+  sharedUserId: string = '';
+
+  @ApiProperty({ 
+    description: "Approved or Declined"
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  grant: boolean = false;
 }
 
 export class CreateActivitiesDto {
