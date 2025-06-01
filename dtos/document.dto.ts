@@ -303,6 +303,13 @@ export class NotificationDto {
   @IsOptional()
   @IsString()
   content?: string;
+
+  @ApiProperty({ 
+    description: "Notification of Request"
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  isRequest: boolean = false;
 }
 
 
