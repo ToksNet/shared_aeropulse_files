@@ -156,7 +156,7 @@ export class CreateDocumentDto {
 export class UpdateDocumentDto {
   @ApiPropertyOptional({ description: "Updated file name" })
   @IsOptional()
-  fileName?: string = '';
+  file_name?: string = '';
 
   @ApiPropertyOptional({ description: "Updated file path" })
   @IsOptional()
