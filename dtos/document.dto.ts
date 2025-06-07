@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Documents } from "@prisma/client";
-import { Transform } from "class-transformer";
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export enum DocumentPermissionType {
@@ -19,6 +18,9 @@ export enum ActivityType {
   DOCUMENT_STARRED = "DOCUMENT_STARRED",
   DOCUMENT_UNSTARRED = "DOCUMENT_UNSTARRED",
   DOCUMENT_SIGNED = "DOCUMENT_SIGNED",
+  PERMISSION_REQUEST = "PERMISSION_REQUEST",
+  PERMISSION_GRANTED = "PERMISSION_GRANTED",
+  PERMISSION_DENIED = "PERMISSION_DENIED",
   OTHER = "OTHER"
 }
 
@@ -62,6 +64,21 @@ export class updateDocumentPermissionDto {
   @IsEnum(DocumentPermissionType)
   @IsNotEmpty()
   permission: DocumentPermissionType = DocumentPermissionType.VIEW;
+}
+
+export class handleDocumentPermissionDto {
+ 
+  @ApiProperty({ description: "ID of the User you want to grant Permission" })
+  @IsNotEmpty()
+  @IsString()
+  sharedUserId: string = '';
+
+  @ApiProperty({ 
+    description: "Approved or Declined"
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  grant: boolean = false;
 }
 
 export class CreateActivitiesDto {
@@ -139,7 +156,7 @@ export class CreateDocumentDto {
 export class UpdateDocumentDto {
   @ApiPropertyOptional({ description: "Updated file name" })
   @IsOptional()
-  fileName?: string = '';
+  file_name?: string = '';
 
   @ApiPropertyOptional({ description: "Updated file path" })
   @IsOptional()
@@ -202,8 +219,6 @@ export class MoveDocumentDto {
 }
 
 export class ShareDocumentDto {
-  @Transform(({ value }) => (Array.isArray(value) ? value : Array(value)))
-  
   @ApiProperty({ description: "ID of the User you want to share the document with document" })
   @IsNotEmpty()
   @IsString()
@@ -288,6 +303,13 @@ export class NotificationDto {
   @IsOptional()
   @IsString()
   content?: string;
+
+  @ApiProperty({ 
+    description: "Notification of Request"
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  isRequest: boolean = false;
 }
 
 
