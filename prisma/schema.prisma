@@ -180,7 +180,7 @@ model ChatMessage {
   callSessionId  String? 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  attachments Attachment[] @relation(onDelete: Cascade)
+  attachments Attachment[] 
 
   sender    User       @relation("SentMessages", fields: [senderId], references: [id])
   recipient User?      @relation("ReceivedMessages", fields: [recipientId], references: [id])
