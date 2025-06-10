@@ -135,12 +135,14 @@ export class AddGroupMemberDto {
   groupId: string = '';
 
   @ApiProperty({
-    description: 'The ID of the user to add as a member of the chat group',
-    example: 'user-789',
+    description: 'List of user IDs to add/remove',
+    type: [String],
+    example: ['user-123', 'user-456'],
   })
   @IsString()
+  @IsArray()
   @IsNotEmpty()
-  userId: string = '';
+  userId: string[] = [];
 }
 
 export class UpdateGroupMemberDto extends PartialType(AddGroupMemberDto) {}

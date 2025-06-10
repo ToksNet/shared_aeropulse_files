@@ -3,12 +3,12 @@ import { IsInt, IsString, IsOptional, IsArray, IsObject, IsBoolean  } from 'clas
 
 
 export class CreateCallDto {
-  @ApiProperty({ description: 'Initiator user ID' })
+  @ApiProperty({ description: 'Initiator users ID' })
   @IsString() initiatorId: string = '';
 
   @ApiPropertyOptional({ description: 'Invitee user IDs', type: [String] })
   @IsOptional() @IsArray() @IsString({ each: true })
-  participantIds?: string[];
+  participantIds?: string[]; 
 }
   
   // src/dtos/join-call.dto.ts
