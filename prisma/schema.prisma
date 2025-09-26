@@ -1,6 +1,5 @@
 // prisma/schema.prisma
 
-
 // This is your Prisma schema file,
 
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
@@ -15,58 +14,106 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(uuid())
-  email          String   @unique
-  password       String
-  firstName      String
-  lastName       String
-  role           String
-  department     String
-  phoneNumber    String?   @unique
-  profilePicture String?
-  createdAt      DateTime @default(now())
-  Documents         Documents[] @relation("authorized_users")
-  Documents_created Documents[] @relation("author")
+  id                 String      @id @default(uuid())
+  email              String      @unique
+  password           String
+  firstName          String
+  lastName           String
+  role               UserRole    @default(Member)
+  department         String
+  phoneNumber        String?     @unique
+  profilePicture     String?
+  isActive           Boolean     @default(true)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  Documents          Documents[] @relation("authorized_users")
+  Documents_created  Documents[] @relation("author")
+  Documents_modified Documents[] @relation("modifier")
 
-  messages ChatMessage[]
-  groups   GroupMember[]
+  sentMessages     ChatMessage[] @relation("SentMessages")
+  receivedMessages ChatMessage[] @relation("ReceivedMessages")
+  groups           GroupMember[]
+  chatLists        ChatList[]
 
-  Folders Folders[] @relation("author")
+  Folders    Folders[]    @relation("author")
+  Activities Activities[] @relation("author")
+
+  ESignature ESignature?
+
+  DocumentUserPermission DocumentUserPermission[]
+  DeletedMessage         DeletedMessage[]
+
+  Notification Notification[] @relation("SentNotification")
+
+  ReceivedNotification Notification[]
+
+  sessionParticipants SessionParticipant[]
+}
+
+enum UserRole {
+  Admin
+  Member
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Invite {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  role        String
-  department  String
-  token       String   @unique
-  expiresAt   DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  email      String   @unique
+  role       UserRole @default(Member)
+  department String
+  token      String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
-
 model Documents {
-  id               String   @id @default(uuid())
-  file_name        String   @db.VarChar(512)
-  path             String   @db.VarChar(512)
-  mime_type        String   @db.VarChar(512)
-  native           Boolean
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id            String       @id @default(uuid())
+  file_name     String       @unique @db.VarChar(512)
+  path          String?      @db.VarChar(512)
+  mime_type     String?      @db.VarChar(512)
+  document_type DocumentType @default(FILE)
+  content       String?      @db.LongText
+  department    String       @db.VarChar(512)
+  native        Boolean
+  starred       Boolean
+  deleted       Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   // relations
-  author_id           String
-  author  User @relation( "author", fields: [author_id], references: [id])
+  modified_by      String?
+  modifier         User?    @relation("modifier", fields: [modified_by], references: [id])
+  author_id        String
+  author           User     @relation("author", fields: [author_id], references: [id])
   folder_id        String?
   folder           Folders? @relation(fields: [folder_id], references: [id])
   authorized_users User[]   @relation("authorized_users")
+
+  ESignature_id String?
+  Esignature    ESignature? @relation(fields: [ESignature_id], references: [id])
+
+  Activities Activities[]
+
+  DocumentUserPermission DocumentUserPermission[]
+}
+
+enum DocumentType {
+  FOLDER
+  FILE
 }
 
 model Folders {
-  id   String @id @default(uuid())
-  name String @db.VarChar(512)
-  path String @db.VarChar(512)
+  id            String       @id @default(uuid())
+  name          String       @db.VarChar(512)
+  document_type DocumentType @default(FOLDER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -77,35 +124,201 @@ model Folders {
   Documents Documents[]
 }
 
+model Activities {
+  id           String       @id @default(uuid())
+  description  String       @db.VarChar(512)
+  activityType ActivityType
+  documentId   String?
+  document     Documents?   @relation(fields: [documentId], references: [id])
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  author_id String
+  author    User   @relation("author", fields: [author_id], references: [id])
+}
+
+enum ActivityType {
+  DOCUMENT_CREATED
+  DOCUMENT_UPDATED
+  DOCUMENT_DELETED
+  DOCUMENT_SHARED
+  DOCUMENT_STARRED
+  DOCUMENT_UNSTARRED
+  DOCUMENT_SIGNED
+  PERMISSION_REQUESTED
+  PERMISSION_GRANTED
+  PERMISSION_DENIED
+  DOCUMENT_MOVED_TO_TRASH
+  DOCUMENT_MOVED_TO_FOLDER
+  OTHER
+}
+
+enum DocumentPermissionType {
+  VIEW
+  EDIT
+  OWNER
+}
+
+model DocumentUserPermission {
+  id         String                 @id @default(uuid())
+  permission DocumentPermissionType
+  documentId String
+  userId     String
+  document   Documents              @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+
+  @@unique([documentId, userId])
+}
 
 model ChatMessage {
-  id        String   @id @default(uuid())
-  content   String?
-  senderId  String
-  groupId   String?  // null means private/direct message
-  createdAt DateTime @default(now())
-  attachmentUrl String?
+  id          String       @id @default(uuid())
+  content     String?      @db.LongText
+  senderId    String
+  recipientId String?
+  groupId     String? // null means private/direct message
+  callSessionId  String? 
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  attachments Attachment[] 
 
-  sender    User     @relation(fields: [senderId], references: [id])
-  group     ChatGroup? @relation(fields: [groupId], references: [id])
+  sender      User         @relation("SentMessages", fields: [senderId], references: [id])
+  recipient   User?        @relation("ReceivedMessages", fields: [recipientId], references: [id])
+  group       ChatGroup?   @relation(fields: [groupId], references: [id])
+  callSession CallSession? @relation(fields: [callSessionId], references: [id])
+  deletedMessages DeletedMessage[]
+}
+
+model DeletedMessage {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  message   ChatMessage @relation(fields: [messageId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatList {
+  id        String   @id @default(uuid())
+  userId    String
+  chatId    String // Combination of senderId and recipientId or groupId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, chatId], name: "userId_chatId")
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  content   String?   @db.LongText
+  senderId  String
+  isRequest Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  sender     User   @relation("SentNotification", fields: [senderId], references: [id])
+  recipients User[]
+}
+
+model Attachment {
+  id            String          @id @default(uuid())
+  url           String
+  fileType      String? // optional field to store file type or extension
+  type          AttachmentType?
+  chatMessageId String
+  chatMessage   ChatMessage     @relation(fields: [chatMessageId], references: [id])
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+enum AttachmentType {
+  LINK
+  IMAGE
+  VIDEO
+  DOCUMENT
 }
 
 model ChatGroup {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  
-  messages  ChatMessage[]
-  members   GroupMember[]
+  id             String            @id @default(uuid())
+  name           String            @unique
+  profilePicture String?
+  description    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  messages       ChatMessage[]
+  members        GroupMember[]
+  permissions    GroupPermission[]
+}
+
+model GroupPermission {
+  id              String    @id @default(uuid())
+  groupId         String
+  canEditSettings Boolean   @default(false) // Permission to edit group name/description
+  canSendMessage  Boolean   @default(true) // Permission to send messages
+  canAddMembers   Boolean   @default(false) // Permission to add members
+  group           ChatGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+enum GroupMemberTitle {
+  GroupAdmin
+  Member
 }
 
 model GroupMember {
-  id       String   @id @default(uuid())
+  id       String           @id @default(uuid())
   groupId  String
   userId   String
-  joinedAt DateTime @default(now())
+  title    GroupMemberTitle @default(Member)
+  joinedAt DateTime         @default(now())
 
-  group    ChatGroup @relation(fields: [groupId], references: [id])
-  user     User      @relation(fields: [userId], references: [id])
+  group ChatGroup @relation(fields: [groupId], references: [id])
+  user  User      @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, groupId])
+}
+
+model ESignature {
+  id   String @id @default(uuid())
+  path String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user_id         String      @unique
+  user            User        @relation(fields: [user_id], references: [id])
+  documentsSigned Documents[]
+}
+
+model CallSession {
+  id           String               @id @default(uuid())
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  initiatorId  String // user who started the call
+  isActive     Boolean              @default(true)
+  participants SessionParticipant[] // relation: participants in this call
+  chatMessages ChatMessage[] // relation: chat messages in this call
+}
+
+model SessionParticipant {
+  id              String      @id @default(uuid())
+  callSession     CallSession @relation(fields: [callSessionId], references: [id])
+  callSessionId   String
+  userId          String // ID of the user
+  user            User        @relation(fields: [userId], references: [id])
+  isHandRaised    Boolean     @default(false)
+  isScreenSharing Boolean     @default(false)
+  joinedAt        DateTime    @default(now())
+  leftAt          DateTime?
 }
